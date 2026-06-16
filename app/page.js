@@ -166,7 +166,8 @@ function Switch({ labelA, labelB, value, onChange, colorB }) {
 
 // ── Page principale ───────────────────────────────────────────────────────────
 export default function Page() {
-  const [regionB,    setRegionB]   = useState(false)
+//  const [regionB,    setRegionB]   = useState(false)
+  const regionB = false
   const [fuelD,      setFuelD]     = useState(false)
   const [codes,      setCodes]     = useState(CP_76)
   const [stations,   setStations]  = useState([])
@@ -200,9 +201,10 @@ export default function Page() {
       setCodes(saved)
       setLsInfo(`Codes mémorisés : ${saved.join(', ')}`)
       load(saved)
-    } else {
-      load(CP_76)
     }
+	// else {
+      // load(CP_76)
+    // }
   }, [load])
 
   // Changement de région (pas au montage)
@@ -262,7 +264,7 @@ export default function Page() {
             <div>
               <h1 className={c.title}>Prix Carburants</h1>
               <p className={c.sub}>
-                {regionB ? 'Morbihan (56)' : 'Seine-Maritime (76)'}
+                // {regionB ? 'Morbihan (56)' : 'Seine-Maritime (76)'}
                 {' \u00b7 '}{fuelD ? 'Gazole' : 'E10'}
               </p>
             </div>
@@ -276,15 +278,21 @@ export default function Page() {
 
       <div className={c.wrap}>
 
-        {/* ── Switchs ── */}
-        <div className={c.switchBar}>
+       {/* ── Switchs ── */}
+		{/*
+       <div className={c.switchBar}>
           <Switch labelA="Seine-Maritime" labelB="Morbihan"
             value={regionB} onChange={setRegionB} colorB="var(--acc)" />
           <div className={c.switchDivider} />
           <Switch labelA="E10" labelB="Gazole"
             value={fuelD} onChange={setFuelD} colorB="var(--dsl)" />
         </div>
-
+		 */}
+		 
+		<div className={c.switchBar}>
+			<Switch labelA="E10" labelB="Gazole"
+			  value={fuelD} onChange={setFuelD} colorB="var(--dsl)" />
+		</div>
         {/* ── Codes actifs (affichage + suppression) ── */}
         {!regionB && (
           <div className={c.codesBar}>
@@ -326,7 +334,7 @@ export default function Page() {
         {/* ── Panneau recherche géographique ── */}
         {!regionB && <GeoSearch onApply={appliquerCodes} />}
 
-        {/* ── Stats ── */}
+       {/* ── Stats ── */}
         {!loading && avecPrix.length > 0 && (
           <div className={c.stats}>
             {[
