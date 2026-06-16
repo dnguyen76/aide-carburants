@@ -13,12 +13,115 @@ async function rechercherCommunes(nom) {
 }
 
 // ── Communes dans un rayon autour de lat/lon ───────────────────────────────
-async function communesAutour(lat, lon, rayonKm) {
-  const url = `${GEO_API}/communes?lat=${lat}&lon=${lon}&distance=${rayonKm * 1000}&fields=nom,codesPostaux&limit=200`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
+// async function communesAutour(lat, lon, rayonKm) {
+  // const url = `${GEO_API}/communes?lat=${lat}&lon=${lon}&distance=${rayonKm * 1000}&fields=nom,codesPostaux&limit=200`
+  // const res = await fetch(url)
+  // if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  // return res.json()
+// }
+
+
+// début modif
+
+// Distance entre 2 points GPS (km)
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLon = (lon2 - lon1) * Math.PI / 180
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
+
+// Chargement des communes avec coordonnées GPS
+// async function chargerCommunes() {
+  // const res = await fetch(
+    // `${GEO_API}/communes?fields=nom,code,centre,population&format=json`
+  // )
+
+  // if (!res.ok) {
+    // throw new Error(`HTTP ${res.status}`)
+  // }
+
+  // return res.json()
+// }
+let cacheCommunes = null
+
+async function chargerCommunes() {
+  if (cacheCommunes) return cacheCommunes
+
+  const res = await fetch(
+    `${GEO_API}/communes?fields=nom,codesPostaux,centre,population&format=json`
+  )
+
+  cacheCommunes = await res.json()
+  return cacheCommunes
+}
+
+// Recherche des communes dans un rayon donné
+async function communesAutour(lat, lon, rayonKm) {
+  const communes = await chargerCommunes()
+  
+
+// console.log("Nb communes :", communes.length)
+// communes.slice(0, 5).forEach(c =>
+  // console.log(c.nom)
+// )
+// console.log("GPS utilisateur :", lat, lon)
+
+// const test = communes[0]
+
+// const [lng, latCommune] = test.centre.coordinates
+
+// console.log(
+  // test.nom,
+  // latCommune,
+  // lng,
+  // distanceKm(lat, lon, latCommune, lng)
+// )
+//  return communes
+    // .filter(c => {
+      // const coords = c.centre?.coordinates
+      // if (!coords) return false
+
+      // const [lng, latCommune] = coords
+
+      // return (
+        // distanceKm(lat, lon, latCommune, lng) <= rayonKm
+      // )
+    // })
+    // .sort((a, b) => b.population - a.population)
+//}
+	const resultat = communes.filter(c => {
+    const coords = c.centre?.coordinates
+    if (!coords) return false
+
+    const [lng, latCommune] = coords
+
+    return (
+      distanceKm(lat, lon, latCommune, lng) <= rayonKm
+    )
+  })
+
+  console.log("Communes trouvées :", resultat.length)
+
+  resultat.slice(0, 20).forEach(c => {
+    console.log(c.nom, "CP ", c.codePostaux)
+  })
+
+  return resultat
+}
+
+
+// fin modif
+
+
+
 
 // ── Composant ──────────────────────────────────────────────────────────────
 export default function GeoSearch({ onApply }) {
@@ -83,20 +186,38 @@ export default function GeoSearch({ onApply }) {
     setGeoLoading(true); setGeoErr(null)
     try {
       const res = await communesAutour(lat, lon, r)
+	  console.log(res)
       // Dédoublonner les codes postaux
       const seen = new Set()
       const liste = []
-      for (const c of res) {
-        for (const cp of (c.codesPostaux || [])) {
-          if (!seen.has(cp)) {
-            seen.add(cp)
-            liste.push({ cp, nom: c.nom })
-          }
-        }
-      }
+      // for (const c of res) {
+        // for (const cp of (c.codesPostaux || [])) {
+          // if (!seen.has(cp)) {
+            // seen.add(cp)
+            // liste.push({ cp, nom: c.nom })
+          // }
+        // }
+      // }
+		for (const c of res) {
+			const cps = c.codesPostaux ?? []
+            console.log("Nombre de code Postaux",cps.length)
+			if (cps.length === 0) {
+			// fallback sécurité
+				liste.push({ cp: c.code, nom: c.nom })
+			} else {
+				for (const cp of cps) {
+				if (!seen.has(cp)) {
+				seen.add(cp)
+				liste.push({ cp, nom: c.nom })
+		}
+    }
+  }
+}
       liste.sort((a, b) => a.cp.localeCompare(b.cp))
       setCommunesRayon(liste)
+	  console.log(liste)
       setSelection(liste.map(x => x.cp))  // tout coché par défaut
+	  
     } catch (e) {
       setGeoErr(e.message)
     } finally {
