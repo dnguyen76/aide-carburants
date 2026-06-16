@@ -1,0 +1,279 @@
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--b2);
+  border-radius: var(--rl);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  position: relative;
+}
+
+.panelTitle {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--tx3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* ── Ligne recherche + GPS ── */
+.row1 {
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 180px;
+  position: relative;
+}
+
+.inp {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  color: var(--tx);
+  font-family: var(--ff);
+  font-size: .9rem;
+  padding: .55rem .9rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.inp::placeholder { color: var(--tx3); }
+.inp:focus { border-color: var(--acc); }
+
+/* Suggestions dropdown */
+.suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--bg2);
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  z-index: 200;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+
+.suggestion {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .55rem 1rem;
+  cursor: pointer;
+  transition: background .15s;
+  border-bottom: 1px solid var(--b1);
+}
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover { background: var(--bg3); }
+
+.sugNom { font-size: .88rem; font-weight: 600; color: var(--tx); }
+.sugCp  { font-family: var(--fm); font-size: .75rem; color: var(--tx3); flex-shrink: 0; }
+
+/* Bouton GPS */
+.btnGps {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--bg3);
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  color: var(--tx2);
+  font-family: var(--ff);
+  font-size: .82rem;
+  font-weight: 600;
+  padding: .55rem .9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.btnGps:hover:not(:disabled) { border-color: var(--acc); color: var(--acc); }
+.btnGps:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Pivot GPS badge */
+.pivotBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .75rem;
+  color: var(--acc);
+  background: rgba(245,166,35,.08);
+  border: 1px solid rgba(245,166,35,.2);
+  border-radius: 999px;
+  padding: .25rem .75rem;
+  width: fit-content;
+}
+
+/* ── Rayon ── */
+.rayonRow {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+}
+
+.rayonLabel {
+  font-size: .78rem;
+  color: var(--tx3);
+  font-weight: 600;
+  margin-right: .2rem;
+}
+
+.rayonBtn {
+  background: var(--bg3);
+  border: 1px solid var(--b2);
+  color: var(--tx2);
+  border-radius: 999px;
+  font-family: var(--ff);
+  font-size: .78rem;
+  font-weight: 600;
+  padding: .3rem .7rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.rayonBtn:hover { border-color: var(--acc); color: var(--acc); }
+.rayonOn { background: var(--acc); border-color: var(--acc); color: #000; }
+
+.btnChercher {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: var(--bg3);
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  color: var(--tx2);
+  font-family: var(--ff);
+  font-size: .82rem;
+  font-weight: 600;
+  padding: .3rem .8rem;
+  cursor: pointer;
+  margin-left: .25rem;
+  transition: all .15s;
+}
+.btnChercher:hover:not(:disabled) { border-color: var(--acc); color: var(--acc); }
+.btnChercher:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Liste communes ── */
+.listHeader {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.listCount {
+  font-size: .75rem;
+  color: var(--tx3);
+  flex: 1;
+}
+
+.selBtn {
+  background: none;
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  color: var(--tx3);
+  font-family: var(--ff);
+  font-size: .72rem;
+  padding: .2rem .55rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.selBtn:hover { color: var(--acc); border-color: var(--acc); }
+
+.communeList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: .3rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: .25rem;
+}
+
+.communeLine {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .3rem .5rem;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: background .15s;
+  user-select: none;
+}
+.communeLine:hover { background: var(--bg3); }
+
+.chk {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--acc);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.communeCp {
+  font-family: var(--fm);
+  font-size: .75rem;
+  color: var(--acc);
+  min-width: 3.5rem;
+  flex-shrink: 0;
+}
+
+.communeNom {
+  font-size: .8rem;
+  color: var(--tx2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Bouton appliquer ── */
+.btnApply {
+  background: var(--acc);
+  color: #000;
+  border: none;
+  border-radius: var(--r);
+  font-family: var(--ff);
+  font-size: .9rem;
+  font-weight: 700;
+  padding: .65rem 1.25rem;
+  cursor: pointer;
+  transition: background .15s;
+  width: 100%;
+  margin-top: .25rem;
+}
+.btnApply:hover:not(:disabled) { background: var(--acc2); }
+.btnApply:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Spinner ── */
+.spin {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--b2);
+  border-top-color: var(--acc);
+  border-radius: 50%;
+  animation: sp .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* ── Erreur ── */
+.err {
+  font-size: .75rem;
+  color: var(--red);
+  background: rgba(231,76,60,.08);
+  border: 1px solid rgba(231,76,60,.2);
+  border-radius: var(--r);
+  padding: .4rem .75rem;
+}

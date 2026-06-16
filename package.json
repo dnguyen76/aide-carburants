@@ -1,0 +1,20 @@
+{
+  "name": "carburants-normandie",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "next": "^16.2.9",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-leaflet": "^4.2.1"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true
+  }
+}

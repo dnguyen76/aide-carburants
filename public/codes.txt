@@ -1,0 +1,5 @@
+# Codes postaux pour la recherche de prix carburants
+# Un code par ligne — lignes vides et commentaires (#) ignorés
+76800
+76120
+76240
