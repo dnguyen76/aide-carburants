@@ -191,3 +191,8 @@
   transition: color .15s, border-color .15s;
 }
 .btnReset:hover { color: var(--red); border-color: var(--red); }
+.dist {
+  color: var(--acc);
+  font-weight: 600;
+  white-space: nowrap;
+}
