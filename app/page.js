@@ -14,6 +14,20 @@ const API_BASE =
   'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets' +
   '/prix-des-carburants-en-france-flux-instantane-v2/records'
 
+// Distance entre 2 points GPS (km)
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLon = (lon2 - lon1) * Math.PI / 180
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+
 // ── localStorage ──────────────────────────────────────────────────────────────
 function lireCodesLocaux() {
   try {
@@ -71,7 +85,7 @@ const fmtD = iso => {
 }
 
 // ── Carte station ─────────────────────────────────────────────────────────────
-function Card({ st, rank, isMin, isMax, fuel, onMapClick }) {
+function Card({ st, rank, isMin, isMax, fuel, onMapClick, userPos }) {
   const [open, setOpen] = useState(false)
   const prix     = fuel === 'gazole' ? st.gazole_prix : st.e10_prix
   const rupture  = fuel === 'gazole' ? null : st.e10_rupture
@@ -82,6 +96,13 @@ function Card({ st, rank, isMin, isMax, fuel, onMapClick }) {
   const noFuel   = prix == null
   const cls      = [c.card, isMin && c.cMin, isMax && c.cMax, (rupt || noFuel) && c.cRup]
     .filter(Boolean).join(' ')
+
+  // Distance à la position courante
+  const lat = st.latitude  ? parseFloat(st.latitude)  / 100000 : null
+  const lon = st.longitude ? parseFloat(st.longitude) / 100000 : null
+  const dist = (userPos && lat != null && lon != null && !isNaN(lat) && !isNaN(lon))
+    ? distanceKm(userPos.lat, userPos.lon, lat, lon)
+    : null
 
   return (
     <div className={cls}
@@ -95,7 +116,10 @@ function Card({ st, rank, isMin, isMax, fuel, onMapClick }) {
             <span className={c.cpTag}>{st.cp}</span>
             <span className={c.ville}>{st.ville}</span>
           </div>
-          <div className={c.addr}>{st.adresse}</div>
+          <div className={c.addr}>
+            {st.adresse}
+            {dist != null && <span className={c.dist}> · {dist.toFixed(1)} km</span>}
+          </div>
         </div>
         <div className={c.priceBox}>
           {rupt ? <span className={c.ruptTxt}>RUPTURE</span>
@@ -140,6 +164,7 @@ function Card({ st, rank, isMin, isMax, fuel, onMapClick }) {
   )
 }
 
+
 // ── Switch 2 positions ────────────────────────────────────────────────────────
 function Switch({ labelA, labelB, value, onChange, colorB }) {
   return (
@@ -177,6 +202,7 @@ export default function Page() {
   const [lastFetch,  setLastFetch] = useState(null)
   const [mapStation, setMapStation]= useState(null)
   const [lsInfo,     setLsInfo]    = useState(null)
+  const [userPos, setUserPos] = useState(null) // { lat, lon }
 
   const fuel = fuelD ? 'gazole' : 'e10'
 
@@ -215,7 +241,17 @@ export default function Page() {
   }, [regionB]) // eslint-disable-line
 
   // Supprimer un code de la liste active (mode 76 seulement)
-  function removeCode(cp) {
+ 
+useEffect(() => {
+  if (!navigator.geolocation) return
+  navigator.geolocation.getCurrentPosition(
+    pos => setUserPos({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+    () => setUserPos(null),
+    { timeout: 8000 }
+  )
+}, [])
+
+ function removeCode(cp) {
     const next = codes.filter(x => x !== cp)
     setCodes(next)
     sauvegarderCodes(next)
@@ -263,10 +299,10 @@ export default function Page() {
             <span className={c.ico}>&#9981;</span>
             <div>
               <h1 className={c.title}>Prix Carburants</h1>
-              <p className={c.sub}>
-                // {regionB ? 'Morbihan (56)' : 'Seine-Maritime (76)'}
-                {' \u00b7 '}{fuelD ? 'Gazole' : 'E10'}
-              </p>
+               {/* <p className={c.title}>
+                {regionB ? 'Morbihan (56)' : 'Seine-Maritime (76)'}
+                {' \u00b7 '} {fuelD ? 'Gazole' : 'E10'}
+              </p>*/}
             </div>
           </div>
           <a href="https://data.economie.gouv.fr/explore/dataset/prix-des-carburants-en-france-flux-instantane-v2/"
@@ -383,12 +419,14 @@ export default function Page() {
           <div className={c.list}>
             {sorted.map((st, i) => {
               const p = getPrix(st)
-              return (
+			 
+             return (
                 <Card key={st.id || i} st={st} rank={i + 1}
                   isMin={p === minP && p != null}
                   isMax={p === maxP && p != null}
                   fuel={fuel}
                   onMapClick={setMapStation}
+				  userPos={userPos}
                 />
               )
             })}
