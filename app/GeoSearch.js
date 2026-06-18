@@ -337,7 +337,7 @@ export default function GeoSearch({ onApply }) {
           title="Utiliser ma position GPS">
           {gpsLoading
             ? <span className={g.spin} />
-            : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            : <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
@@ -372,7 +372,7 @@ export default function GeoSearch({ onApply }) {
         ))}
         {hasPivot && (
           <button className={g.btnChercher} onClick={lancerRecherche} disabled={geoLoading}>
-            {geoLoading ? <span className={g.spin} /> : '🔍'} Chercher
+            {geoLoading ? <span className={g.spin} /> : '🔍'} Chercher communes voisines
           </button>
         )}
       </div>
