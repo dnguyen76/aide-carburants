@@ -125,9 +125,9 @@
 }
 
 .rayonLabel {
-  font-size: .78rem;
-  color: var(--tx3);
-  font-weight: 600;
+  color: #87CEEB;
+  font-size: 1.5rem;
+  font-weight: 700;
   margin-right: .2rem;
 }
 
@@ -148,16 +148,17 @@
 
 .btnChercher {
   display: inline-flex;
+  min-height:50px
   align-items: center;
   gap: .35rem;
   background: var(--bg3);
   border: 1px solid var(--b2);
-  border-radius: var(--r);
+  border-radius: 8px;
   color: var(--tx2);
   font-family: var(--ff);
-  font-size: .82rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  padding: .3rem .8rem;
+  padding: 12px 24px;
   cursor: pointer;
   margin-left: .25rem;
   transition: all .15s;
