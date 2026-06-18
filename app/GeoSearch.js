@@ -272,9 +272,27 @@ export default function GeoSearch({ onApply }) {
   function toutDecocher()  { setSelection([]) }
 
   // ── Appliquer la sélection ──────────────────────────────────────────────
+  // function appliquer() {
+    // if (selection.length === 0) return
+    // onApply(selection)
+  // }
+
+// ── Appliquer la sélection ──────────────────────────────────────────────
   function appliquer() {
     if (selection.length === 0) return
-    onApply(selection)
+    // Déterminer le pivot utilisé pour cette recherche
+    let pivot = null
+    if (gpsPos) {
+      pivot = { lat: gpsPos.lat, lon: gpsPos.lon, type: 'gps' }
+    } else if (commune?.centre?.coordinates) {
+      pivot = {
+        lat: commune.centre.coordinates[1],
+        lon: commune.centre.coordinates[0],
+        type: 'commune',
+        nom: commune.nom,
+      }
+    }
+    onApply(selection, pivot)
   }
 
   const hasPivot = !!(commune || gpsPos)
@@ -390,7 +408,7 @@ export default function GeoSearch({ onApply }) {
             className={g.btnApply}
             onClick={appliquer}
             disabled={selection.length === 0}>
-            Rechercher les stations ({selection.length} codes)
+			Rechercher les stations ( dans {selection.length} communes)
           </button>
         </>
       )}
