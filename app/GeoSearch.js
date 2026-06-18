@@ -12,16 +12,6 @@ async function rechercherCommunes(nom) {
   return res.json()
 }
 
-// ── Communes dans un rayon autour de lat/lon ───────────────────────────────
-// async function communesAutour(lat, lon, rayonKm) {
-  // const url = `${GEO_API}/communes?lat=${lat}&lon=${lon}&distance=${rayonKm * 1000}&fields=nom,codesPostaux&limit=200`
-  // const res = await fetch(url)
-  // if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  // return res.json()
-// }
-
-
-// début modif
 
 // Distance entre 2 points GPS (km)
 function distanceKm(lat1, lon1, lat2, lon2) {
@@ -38,18 +28,6 @@ function distanceKm(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
-// Chargement des communes avec coordonnées GPS
-// async function chargerCommunes() {
-  // const res = await fetch(
-    // `${GEO_API}/communes?fields=nom,code,centre,population&format=json`
-  // )
-
-  // if (!res.ok) {
-    // throw new Error(`HTTP ${res.status}`)
-  // }
-
-  // return res.json()
-// }
 let cacheCommunes = null
 
 async function chargerCommunes() {
@@ -67,36 +45,6 @@ async function chargerCommunes() {
 async function communesAutour(lat, lon, rayonKm) {
   const communes = await chargerCommunes()
   
-
-// console.log("Nb communes :", communes.length)
-// communes.slice(0, 5).forEach(c =>
-  // console.log(c.nom)
-// )
-// console.log("GPS utilisateur :", lat, lon)
-
-// const test = communes[0]
-
-// const [lng, latCommune] = test.centre.coordinates
-
-// console.log(
-  // test.nom,
-  // latCommune,
-  // lng,
-  // distanceKm(lat, lon, latCommune, lng)
-// )
-//  return communes
-    // .filter(c => {
-      // const coords = c.centre?.coordinates
-      // if (!coords) return false
-
-      // const [lng, latCommune] = coords
-
-      // return (
-        // distanceKm(lat, lon, latCommune, lng) <= rayonKm
-      // )
-    // })
-    // .sort((a, b) => b.population - a.population)
-//}
 	const resultat = communes.filter(c => {
     const coords = c.centre?.coordinates
     if (!coords) return false
@@ -398,7 +346,7 @@ export default function GeoSearch({ onApply }) {
                   className={g.chk}
                   checked={selection.includes(cp)}
                   onChange={() => toggleCp(cp)} />
-                <span className={g.communeCp}>{cp}</span>
+                 {/* <span className={g.communeCp}>{cp}</span> */}
                 <span className={g.communeNom}>{nom}</span>
               </label>
             ))}
