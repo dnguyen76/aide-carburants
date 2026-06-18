@@ -202,7 +202,8 @@ export default function Page() {
   const [lastFetch,  setLastFetch] = useState(null)
   const [mapStation, setMapStation]= useState(null)
   const [lsInfo,     setLsInfo]    = useState(null)
-  const [userPos, setUserPos] = useState(null) // { lat, lon }
+//  const [userPos, setUserPos] = useState(null) // { lat, lon }
+  const [refPos, setRefPos] = useState(null) // { lat, lon, type: 'gps'|'commune', nom? }
 
   const fuel = fuelD ? 'gazole' : 'e10'
 
@@ -242,11 +243,22 @@ export default function Page() {
 
   // Supprimer un code de la liste active (mode 76 seulement)
  
+// useEffect(() => {
+  // if (!navigator.geolocation) return
+  // navigator.geolocation.getCurrentPosition(
+    // pos => setUserPos({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+    // () => setUserPos(null),
+    // { timeout: 8000 }
+  // )
+// }, [])
+
 useEffect(() => {
   if (!navigator.geolocation) return
   navigator.geolocation.getCurrentPosition(
-    pos => setUserPos({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-    () => setUserPos(null),
+    pos => setRefPos(prev =>
+      prev?.type === 'commune' ? prev : { lat: pos.coords.latitude, lon: pos.coords.longitude, type: 'gps' }
+    ),
+    () => {},
     { timeout: 8000 }
   )
 }, [])
@@ -259,20 +271,31 @@ useEffect(() => {
     if (!regionB) next.length ? load(next) : setStations([])
   }
 
-  function resetCodes() {
-    setCodes(CP_76)
-    try { localStorage.removeItem(LS_KEY) } catch {}
-    setLsInfo(null)
-    if (!regionB) load(CP_76)
-  }
+  // function resetCodes() {
+    // setCodes(CP_76)
+    // try { localStorage.removeItem(LS_KEY) } catch {}
+    // setLsInfo(null)
+    // if (!regionB) load(CP_76)
+  // }
 
   // Callback GeoSearch → appliquer de nouveaux codes
-  function appliquerCodes(newCodes) {
+  // function appliquerCodes(newCodes) {
+    // const uniq = [...new Set(newCodes)].filter(c => /^\d{5}$/.test(c))
+    // if (!uniq.length) return
+    // setCodes(uniq)
+    // sauvegarderCodes(uniq)
+    // setLsInfo(`Codes mémorisés : ${uniq.join(', ')}`)
+    // if (!regionB) load(uniq)
+  // }
+
+// Callback GeoSearch → appliquer de nouveaux codes + pivot de référence
+  function appliquerCodes(newCodes, pivot) {
     const uniq = [...new Set(newCodes)].filter(c => /^\d{5}$/.test(c))
     if (!uniq.length) return
     setCodes(uniq)
     sauvegarderCodes(uniq)
     setLsInfo(`Codes mémorisés : ${uniq.join(', ')}`)
+    if (pivot) setRefPos(pivot)
     if (!regionB) load(uniq)
   }
 
@@ -344,10 +367,12 @@ useEffect(() => {
             <div className={c.codesActions}>
               <button className={c.btnRef} onClick={() => load(codes)}
                 disabled={loading || !codes.length} title="Actualiser">&#8635;</button>
-              {lsInfo && (
+              {/*  Suppression bouton Défaut
+			 {lsInfo && (
                 <button className={c.btnReset} onClick={resetCodes}
                   title="Remettre les codes par défaut">&#8634; Défaut</button>
               )}
+			   */}
             </div>
             {lsInfo && (
               <div className={c.lsInfo}>
@@ -426,7 +451,7 @@ useEffect(() => {
                   isMax={p === maxP && p != null}
                   fuel={fuel}
                   onMapClick={setMapStation}
-				  userPos={userPos}
+				  userPos={refPos}
                 />
               )
             })}
