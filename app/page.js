@@ -6,8 +6,8 @@ import GeoSearch from './GeoSearch'
 
 const MapModal = dynamic(() => import('./MapModal'), { ssr: false })
 
-const CP_76  = ['76800', '76120', '76240']
-const CP_56  = ['56000', '56860', '56370']
+const CP_76  = []
+const CP_56  = []
 const LS_KEY = 'carbu_codes_76'
 
 const API_BASE =
@@ -241,16 +241,7 @@ export default function Page() {
     load(regionB ? CP_56 : codes)
   }, [regionB]) // eslint-disable-line
 
-  // Supprimer un code de la liste active (mode 76 seulement)
- 
-// useEffect(() => {
-  // if (!navigator.geolocation) return
-  // navigator.geolocation.getCurrentPosition(
-    // pos => setUserPos({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-    // () => setUserPos(null),
-    // { timeout: 8000 }
-  // )
-// }, [])
+
 
 useEffect(() => {
   if (!navigator.geolocation) return
@@ -271,22 +262,6 @@ useEffect(() => {
     if (!regionB) next.length ? load(next) : setStations([])
   }
 
-  // function resetCodes() {
-    // setCodes(CP_76)
-    // try { localStorage.removeItem(LS_KEY) } catch {}
-    // setLsInfo(null)
-    // if (!regionB) load(CP_76)
-  // }
-
-  // Callback GeoSearch → appliquer de nouveaux codes
-  // function appliquerCodes(newCodes) {
-    // const uniq = [...new Set(newCodes)].filter(c => /^\d{5}$/.test(c))
-    // if (!uniq.length) return
-    // setCodes(uniq)
-    // sauvegarderCodes(uniq)
-    // setLsInfo(`Codes mémorisés : ${uniq.join(', ')}`)
-    // if (!regionB) load(uniq)
-  // }
 
 // Callback GeoSearch → appliquer de nouveaux codes + pivot de référence
   function appliquerCodes(newCodes, pivot) {
@@ -353,9 +328,9 @@ useEffect(() => {
 			  value={fuelD} onChange={setFuelD} colorB="var(--dsl)" />
 		</div>
         {/* ── Codes actifs (affichage + suppression) ── */}
-        {!regionB && (
-          <div className={c.codesBar}>
-            <div className={c.tags}>
+			{ regionB && (
+           <div className={c.codesBar}>
+            {/* <div className={c.tags}>
               {codes.map(cp => (
                 <span key={cp} className={c.tag}>
                   {cp}
@@ -363,16 +338,19 @@ useEffect(() => {
                     aria-label={`Retirer ${cp}`}>&times;</button>
                 </span>
               ))}
+			  
             </div>
+			*/}
             <div className={c.codesActions}>
               <button className={c.btnRef} onClick={() => load(codes)}
                 disabled={loading || !codes.length} title="Actualiser">&#8635;</button>
+				
               {/*  Suppression bouton Défaut
 			 {lsInfo && (
                 <button className={c.btnReset} onClick={resetCodes}
                   title="Remettre les codes par défaut">&#8634; Défaut</button>
               )}
-			   */}
+			*/}   
             </div>
             {lsInfo && (
               <div className={c.lsInfo}>
@@ -382,7 +360,7 @@ useEffect(() => {
             )}
           </div>
         )}
-
+)
         {/* CP Morbihan */}
         {regionB && (
           <div className={c.bCodes}>
