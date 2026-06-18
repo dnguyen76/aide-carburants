@@ -95,10 +95,11 @@ export default function MapModal({ station, onClose }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={s.wazeBtn}
+				style={{ color: '#87CEEB', fontSize: '2rem' }}
                 title="Ouvrir l'itinéraire dans Waze"
                 onClick={e => e.stopPropagation()}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="lightblue">
                   <path d="M12 1C6.48 1 2 5.48 2 11c0 3.69 1.97 6.93 4.93 8.75L6 22l3.14-1.04C10.02 21.3 11 21.5 12 21.5c5.52 0 10-4.48 10-10S17.52 1 12 1zm1 13.5h-2v-2h2v2zm0-4h-2V7h2v3.5z"/>
                 </svg>
                 Waze
