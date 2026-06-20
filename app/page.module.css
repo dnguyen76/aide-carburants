@@ -196,3 +196,10 @@
   font-weight: 600;
   white-space: nowrap;
 }
+.distLine {
+  font-size: .72rem;
+  color: var(--acc);
+  font-weight: 600;
+  white-space: nowrap;
+  margin-top: 1px;
+}
