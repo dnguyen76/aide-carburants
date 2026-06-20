@@ -116,10 +116,10 @@ function Card({ st, rank, isMin, isMax, fuel, onMapClick, userPos }) {
             <span className={c.cpTag}>{st.cp}</span>
             <span className={c.ville}>{st.ville}</span>
           </div>
-          <div className={c.addr}>
-            {st.adresse}
-            {dist != null && <span className={c.dist}> · {dist.toFixed(1)} km</span>}
-          </div>
+		 <div className={c.addr}>
+			{st.adresse}
+			{dist != null && <span className={c.dist}> · {dist.toFixed(1)} km</span>}
+		</div> 
         </div>
         <div className={c.priceBox}>
           {rupt ? <span className={c.ruptTxt}>RUPTURE</span>
