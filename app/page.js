@@ -242,7 +242,11 @@ export default function Page() {
   }, [regionB]) // eslint-disable-line
 
 
+
+
 useEffect(() => {
+  // Ne pas demander le GPS si un pivot "commune" est déjà actif
+  if (refPos?.type === 'commune') return
   if (!navigator.geolocation) return
 
   const watchId = navigator.geolocation.watchPosition(
@@ -254,8 +258,7 @@ useEffect(() => {
   )
 
   return () => navigator.geolocation.clearWatch(watchId)
-}, [])
-
+}, [refPos?.type])
 
  function removeCode(cp) {
     const next = codes.filter(x => x !== cp)
