@@ -242,17 +242,20 @@ export default function Page() {
   }, [regionB]) // eslint-disable-line
 
 
-
 useEffect(() => {
   if (!navigator.geolocation) return
-  navigator.geolocation.getCurrentPosition(
+
+  const watchId = navigator.geolocation.watchPosition(
     pos => setRefPos(prev =>
       prev?.type === 'commune' ? prev : { lat: pos.coords.latitude, lon: pos.coords.longitude, type: 'gps' }
     ),
-    () => {},
-    { timeout: 8000 }
+    err => console.warn('Géolocalisation indisponible :', err.message),
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
   )
+
+  return () => navigator.geolocation.clearWatch(watchId)
 }, [])
+
 
  function removeCode(cp) {
     const next = codes.filter(x => x !== cp)
