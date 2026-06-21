@@ -99,7 +99,7 @@
 .cRup{opacity:.55}
 .row{display:flex;align-items:center;gap:.75rem}
 .rank{font-family:var(--fm);font-size:.72rem;color:var(--tx3);min-width:1.75rem;flex-shrink:0}
-.info{flex:1;min-width:0}
+.info{flex:1;min-width:0;display:flex;flex-direction:column}
 .nameLine{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
 .cpTag{font-family:var(--fm);font-size:.75rem;color:var(--tx3);background:var(--bg3);padding:1px 5px;border-radius:4px;flex-shrink:0}
 .ville{font-size:.975rem;font-weight:700;letter-spacing:-.01em}
@@ -196,10 +196,14 @@
   font-weight: 600;
   white-space: nowrap;
 }
-.distLine {
+..distLine {
   font-size: .72rem;
   color: var(--acc);
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  margin-bottom: 1px;
 }
+
