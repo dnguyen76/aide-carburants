@@ -14,11 +14,6 @@ const API_BASE =
   'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets' +
   '/prix-des-carburants-en-france-flux-instantane-v2/records'
 
-useEffect(() => {
-  console.log('>>> Page MONTÉE')
-  return () => console.log('>>> Page DÉMONTÉE')
-}, [])
-
 // Distance entre 2 points GPS (km)
 function distanceKm(lat1, lon1, lat2, lon2) {
   const R = 6371
@@ -225,7 +220,10 @@ export default function Page() {
       setLoading(false)
     }
   }, [])
-
+useEffect(() => {
+  console.log('>>> Page MONTÉE')
+  return () => console.log('>>> Page DÉMONTÉE')
+}, [])
   // Démarrage : lire localStorage ou CP_76 par défaut
   useEffect(() => {
     const saved = lireCodesLocaux()
