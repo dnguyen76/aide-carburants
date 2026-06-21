@@ -196,7 +196,7 @@
   font-weight: 600;
   white-space: nowrap;
 }
-..distLine {
+.distLine {
   font-size: .72rem;
   color: var(--acc);
   font-weight: 700;
