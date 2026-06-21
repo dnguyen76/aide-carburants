@@ -320,7 +320,13 @@ useEffect(() => {
       </header>
 
       <div className={c.wrap}>
-
+<div style={{
+  background: '#222', color: '#0f0', fontFamily: 'monospace',
+  fontSize: '11px', padding: '6px 10px', marginBottom: '8px',
+  wordBreak: 'break-all', borderRadius: '4px'
+}}>
+  refPos: {refPos ? `type=${refPos.type} lat=${refPos.lat?.toFixed(4)} lon=${refPos.lon?.toFixed(4)} nom=${refPos.nom || '?'}` : 'NULL'}
+</div>
        {/* ── Switchs ── */}
 		{/*
        <div className={c.switchBar}>
